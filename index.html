@@ -1,174 +1,145 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inbar's Home Hub</title>
-<style>
-:root{
---bg:#f5f2ec;
---card:#ffffff;
---accent:#8a6f52;
---text:#2d2d2d;
---success:#3f7d58;
---danger:#c84b31;
---used:#4f7cac;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text)}
-header{background:white;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.05);position:sticky;top:0;z-index:10}
-h1{margin:0}
-.container{max-width:1400px;margin:auto;padding:20px}
-.stats,.grid{display:grid;gap:14px}
-.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:20px}
-.stat,.card{background:var(--card);border-radius:20px;box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.stat{padding:18px;text-align:center}
-.card{padding:18px;margin-bottom:20px}
-.grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px}
-button{border:none;padding:12px 16px;border-radius:12px;cursor:pointer}
-.primary{background:var(--accent);color:white}
-.danger{background:var(--danger);color:white}
-.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.item img{width:100%;height:240px;object-fit:cover;border-radius:14px}
-.badge{display:inline-block;padding:6px 10px;border-radius:20px;color:white;font-size:.85rem}
-.new{background:var(--success)}
-.used{background:var(--used)}
-.small{color:#666}
-table{width:100%;border-collapse:collapse}
-td,th{padding:8px;border-bottom:1px solid #eee}
-</style>
-</head>
-<body>
-<header><h1>🏡 Inbar's Home Hub</h1></header>
 
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inbar's Home Hub v3</title>
+<style>
+body{margin:0;font-family:system-ui;background:#f5f2ec}
+header{background:#fff;padding:20px;position:sticky;top:0;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.container{max-width:1400px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;box-sizing:border-box}
+button{padding:10px 14px;border:none;border-radius:10px;cursor:pointer}
+.primary{background:#8a6f52;color:white}.danger{background:#c84b31;color:white}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.stat{background:#fff;padding:15px;border-radius:16px;text-align:center}
+.masonry{column-count:3;column-gap:16px}
+@media(max-width:900px){.masonry{column-count:2}}
+@media(max-width:600px){.masonry{column-count:1}}
+.item{display:inline-block;width:100%;margin:0 0 16px}
+.item img{width:100%;border-radius:12px}
+.badge{padding:4px 8px;border-radius:20px;color:white;font-size:12px}
+</style></head><body>
+<header><h1>🏡 Inbar's Home Hub v3</h1></header>
 <div class="container">
 
 <div class="stats">
-<div class="stat"><h2 id="totalItems">0</h2><div>סה״כ פריטים</div></div>
-<div class="stat"><h2 id="boughtItems">0</h2><div>נקנו</div></div>
-<div class="stat"><h2 id="totalCost">₪0</h2><div>עלות כוללת</div></div>
-<div class="stat"><h2 id="rejectedItems">0</h2><div>נפסלו</div></div>
+<div class="stat"><h2 id="totalItems">0</h2><div>פריטים</div></div>
+<div class="stat"><h2 id="totalCost">₪0</h2><div>עלות</div></div>
 </div>
 
 <div class="card">
-<h3>הוספת פריט</h3>
+<h3 id="formTitle">הוספת פריט</h3>
 <div class="grid">
-<input id="name" placeholder="שם פריט">
+<input id="name" placeholder="שם מוצר">
 <select id="category"><option>סלון</option><option>חדר שינה</option></select>
 <select id="condition"><option>חדש</option><option>יד שנייה</option></select>
 <input id="store" placeholder="חנות">
-<input id="price" type="number" placeholder="מחיר מוצר">
-<input id="shipping" type="number" placeholder="מחיר משלוח">
+<input id="price" type="number" placeholder="מחיר">
+<input id="shipping" type="number" placeholder="משלוח">
 <input id="link" placeholder="קישור">
-<select id="status">
-<option>אופציה</option><option>בבדיקה</option><option>לקנייה</option><option>נקנה</option><option>נפסל</option>
-</select>
-<input type="file" id="image" accept="image/*">
+<input id="imageUrl" placeholder="או הדביקי URL לתמונה">
+<input type="file" id="image">
 </div>
-<br>
 <textarea id="notes" placeholder="הערות"></textarea><br><br>
-<button class="primary" onclick="addItem()">הוסף פריט</button>
+<button class="primary" onclick="saveItem()">שמור פריט</button>
 </div>
 
-<div class="card">
-<div class="grid">
-<input id="search" placeholder="חיפוש..." oninput="render()">
-<select id="filterCategory" onchange="render()"><option value="">כל הקטגוריות</option><option>סלון</option><option>חדר שינה</option></select>
-<select id="filterStatus" onchange="render()"><option value="">כל הסטטוסים</option><option>אופציה</option><option>בבדיקה</option><option>לקנייה</option><option>נקנה</option><option>נפסל</option></select>
-<select id="filterCondition" onchange="render()"><option value="">חדש + יד שנייה</option><option>חדש</option><option>יד שנייה</option></select>
-</div>
-</div>
+<div id="items" class="masonry"></div>
 
-<div class="card">
-<h3>השוואת מחירים</h3>
-<div id="comparison"></div>
-</div>
-
-<div id="items" class="items"></div>
 </div>
 
 <script>
-let items=JSON.parse(localStorage.getItem('inbarHomeHub')||'[]');
+let items=JSON.parse(localStorage.getItem('homehubv3')||'[]');
+let editingId=null;
 
-function save(){localStorage.setItem('inbarHomeHub',JSON.stringify(items));render();}
+function qs(id){return document.getElementById(id);}
 
-function addItem(){
- const file=image.files[0];
- const reader=new FileReader();
- reader.onload=function(e){
- items.push({
- id:Date.now(),
- name:name.value,
- category:category.value,
- condition:condition.value,
- store:store.value,
- price:Number(price.value||0),
- shipping:Number(shipping.value||0),
- total:Number(price.value||0)+Number(shipping.value||0),
- link:link.value,
- status:status.value,
- notes:notes.value,
- image:e.target.result
- });
- save();
- };
- if(file) reader.readAsDataURL(file);
- else reader.onload({target:{result:"https://via.placeholder.com/600x400?text=Furniture"}});
+function saveStorage(){
+ localStorage.setItem('homehubv3',JSON.stringify(items));
+ render();
 }
 
-function removeItem(id){items=items.filter(x=>x.id!==id);save();}
+function saveItem(){
+ const file=qs('image').files[0];
+
+ const build=(img)=>{
+   const obj={
+    id:editingId||Date.now(),
+    name:qs('name').value,
+    category:qs('category').value,
+    condition:qs('condition').value,
+    store:qs('store').value,
+    price:Number(qs('price').value||0),
+    shipping:Number(qs('shipping').value||0),
+    link:qs('link').value,
+    notes:qs('notes').value,
+    image:img
+   };
+
+   if(editingId){
+      const idx=items.findIndex(x=>x.id===editingId);
+      items[idx]=obj;
+   }else{
+      items.push(obj);
+   }
+
+   editingId=null;
+   document.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type!=='file') el.value='';
+   });
+   saveStorage();
+ };
+
+ if(file){
+   const reader=new FileReader();
+   reader.onload=e=>build(e.target.result);
+   reader.readAsDataURL(file);
+ }else{
+   build(qs('imageUrl').value || 'https://via.placeholder.com/600x400');
+ }
+}
+
+function editItem(id){
+ const i=items.find(x=>x.id===id);
+ editingId=id;
+ qs('formTitle').innerText='עריכת פריט';
+ qs('name').value=i.name;
+ qs('category').value=i.category;
+ qs('condition').value=i.condition;
+ qs('store').value=i.store;
+ qs('price').value=i.price;
+ qs('shipping').value=i.shipping;
+ qs('link').value=i.link;
+ qs('notes').value=i.notes;
+ qs('imageUrl').value=i.image.startsWith('http')?i.image:'';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteItem(id){
+ items=items.filter(x=>x.id!==id);
+ saveStorage();
+}
 
 function render(){
- const s=search.value.toLowerCase();
- const c=filterCategory.value;
- const st=filterStatus.value;
- const cond=filterCondition.value;
-
- const filtered=items.filter(i=>
- (!s || i.name.toLowerCase().includes(s)||i.store.toLowerCase().includes(s)) &&
- (!c || i.category===c) &&
- (!st || i.status===st) &&
- (!cond || i.condition===cond)
- );
-
- itemsDiv=filtered.map(i=>`
+ qs('items').innerHTML=items.map(i=>`
  <div class="card item">
  <img src="${i.image}">
  <h3>${i.name}</h3>
- <span class="badge ${i.condition==='חדש'?'new':'used'}">${i.condition}</span>
- <p><b>${i.category}</b></p>
+ <span class="badge" style="background:${i.condition==='חדש'?'green':'steelblue'}">${i.condition}</span>
+ <p>${i.category}</p>
  <p>${i.store}</p>
- <p>מחיר מוצר: ₪${i.price.toLocaleString()}</p>
- <p>משלוח: ₪${i.shipping.toLocaleString()}</p>
- <p><b>סה"כ: ₪${i.total.toLocaleString()}</b></p>
- <p>${i.status}</p>
- <p class="small">${i.notes||''}</p>
- <a href="${i.link}" target="_blank">מעבר למוצר</a><br><br>
- <button class="danger" onclick="removeItem(${i.id})">מחק</button>
- </div>`).join('');
- document.getElementById('items').innerHTML=itemsDiv;
+ <p>₪${(i.price+i.shipping).toLocaleString()}</p>
+ <a href="${i.link}" target="_blank">מוצר</a><br><br>
+ <button class="primary" onclick="editItem(${i.id})">עריכה מלאה</button>
+ <button class="danger" onclick="deleteItem(${i.id})">מחק</button>
+ </div>
+ `).join('');
 
- totalItems.innerText=items.length;
- boughtItems.innerText=items.filter(x=>x.status==='נקנה').length;
- rejectedItems.innerText=items.filter(x=>x.status==='נפסל').length;
- totalCost.innerText='₪'+items.reduce((a,b)=>a+b.total,0).toLocaleString();
-
- let groups={};
- items.forEach(i=>{if(!groups[i.name])groups[i.name]=[];groups[i.name].push(i);});
- let html='<table><tr><th>מוצר</th><th>מחיר נמוך</th></tr>';
- let found=false;
- for(let k in groups){
-  if(groups[k].length>1){
-   found=true;
-   let min=Math.min(...groups[k].map(x=>x.total));
-   html+=`<tr><td>${k}</td><td>₪${min.toLocaleString()}</td></tr>`;
-  }
- }
- html+='</table>';
- comparison.innerHTML=found?html:'אין עדיין מוצרים להשוואה';
+ qs('totalItems').innerText=items.length;
+ qs('totalCost').innerText='₪'+items.reduce((a,b)=>a+b.price+b.shipping,0).toLocaleString();
 }
+
 render();
 </script>
-</body>
-</html>
+</body></html>
