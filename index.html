@@ -1,145 +1,622 @@
-
-<!DOCTYPE html><html lang="he" dir="rtl"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Inbar's Home Hub v3</title>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inbar's Home Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:system-ui;background:#f5f2ec}
-header{background:#fff;padding:20px;position:sticky;top:0;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.container{max-width:1400px;margin:auto;padding:20px}
-.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;box-sizing:border-box}
-button{padding:10px 14px;border:none;border-radius:10px;cursor:pointer}
-.primary{background:#8a6f52;color:white}.danger{background:#c84b31;color:white}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.stat{background:#fff;padding:15px;border-radius:16px;text-align:center}
-.masonry{column-count:3;column-gap:16px}
-@media(max-width:900px){.masonry{column-count:2}}
-@media(max-width:600px){.masonry{column-count:1}}
-.item{display:inline-block;width:100%;margin:0 0 16px}
-.item img{width:100%;border-radius:12px}
-.badge{padding:4px 8px;border-radius:20px;color:white;font-size:12px}
-</style></head><body>
-<header><h1>🏡 Inbar's Home Hub v3</h1></header>
+  :root {
+    --bg: #f4f4f6;
+    --surface: #ffffff;
+    --surface-raised: #fafafa;
+    --accent: #1a1a2e;
+    --accent-soft: #eeeef5;
+    --accent-mid: #6c6c99;
+    --text-primary: #111118;
+    --text-secondary: #5c5c6e;
+    --text-hint: #9999b0;
+    --border: rgba(0,0,0,.07);
+    --border-strong: rgba(0,0,0,.13);
+    --danger: #d0392b;
+    --danger-bg: #fff2f1;
+    --green: #1e8a4a;
+    --blue: #1a56a4;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 32px;
+  }
+  .header-inner {
+    max-width: 1300px;
+    margin: auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .logo-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,.95);
+    letter-spacing: 0.1px;
+  }
+  .logo-text span {
+    color: rgba(255,255,255,.45);
+    font-weight: 400;
+    margin: 0 5px;
+  }
+  .header-count {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,.4);
+    letter-spacing: 0.3px;
+  }
+
+  /* ─── LAYOUT ─── */
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 32px 32px 64px;
+  }
+
+  /* ─── STATS ─── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+  }
+  .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: -0.8px;
+  }
+
+  /* ─── FORM ─── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 28px 32px;
+    margin-bottom: 36px;
+  }
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+  }
+  .edit-chip {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent-mid);
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: none;
+  }
+  .edit-chip.on { display: inline; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  input, select, textarea {
+    font-family: 'Heebo', system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    width: 100%;
+    outline: none;
+    transition: border-color .15s, background .15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(26,26,46,.08);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-hint); }
+  select { cursor: pointer; }
+  textarea { resize: vertical; min-height: 76px; }
+  input[type="file"] { padding: 7px 10px; cursor: pointer; font-size: 13px; color: var(--text-secondary); }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+    letter-spacing: 0.1px;
+  }
+  button:active { transform: scale(.98); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { opacity: .85; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-ghost:hover { background: var(--bg); }
+
+  .btn-edit-sm {
+    background: var(--accent-soft);
+    color: var(--accent-mid);
+    border: 1px solid rgba(108,108,153,.15);
+    padding: 7px 13px;
+    font-size: 12px;
+  }
+  .btn-edit-sm:hover { background: #e4e4f0; }
+
+  .btn-danger-sm {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid rgba(208,57,43,.12);
+    padding: 7px 13px;
+    font-size: 12px;
+  }
+  .btn-danger-sm:hover { background: #fde6e4; }
+
+  /* ─── ITEMS ─── */
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .item-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.09);
+  }
+
+  .item-img {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .item-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s;
+  }
+  .item-card:hover .item-img img { transform: scale(1.05); }
+
+  .item-body {
+    padding: 14px 16px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    flex: 1;
+  }
+  .cond-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+    letter-spacing: 0.3px;
+  }
+  .cond-new { background: #e6f7ed; color: var(--green); }
+  .cond-used { background: #e8f0fb; color: var(--blue); }
+
+  .item-meta {
+    font-size: 12px;
+    color: var(--text-hint);
+    display: flex;
+    gap: 6px;
+  }
+  .item-meta-sep { opacity: .4; }
+
+  .item-price {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    margin-top: 4px;
+  }
+  .item-price small {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-hint);
+    letter-spacing: 0;
+  }
+
+  .item-notes {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 6px 10px;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  .item-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .item-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-hint);
+    text-decoration: none;
+    margin-right: auto;
+    transition: color .15s;
+  }
+  .item-link:hover { color: var(--text-primary); }
+
+  /* ─── EMPTY STATE ─── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 64px 20px;
+  }
+  .empty-icon { font-size: 36px; margin-bottom: 14px; opacity: .5; }
+  .empty-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .empty-sub { font-size: 13px; color: var(--text-hint); }
+
+  @media(max-width:600px) {
+    .container { padding: 20px 16px 48px; }
+    .form-card { padding: 20px 18px; }
+    header { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">🏠</div>
+      <div class="logo-text">Inbar's<span>/</span>Home Hub</div>
+    </div>
+    <div class="header-count" id="headerCount"></div>
+  </div>
+</header>
+
 <div class="container">
 
-<div class="stats">
-<div class="stat"><h2 id="totalItems">0</h2><div>פריטים</div></div>
-<div class="stat"><h2 id="totalCost">₪0</h2><div>עלות</div></div>
-</div>
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Items</div>
+      <div class="stat-value" id="totalItems">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">עלות כוללת</div>
+      <div class="stat-value" id="totalCost">₪0</div>
+    </div>
+  </div>
 
-<div class="card">
-<h3 id="formTitle">הוספת פריט</h3>
-<div class="grid">
-<input id="name" placeholder="שם מוצר">
-<select id="category"><option>סלון</option><option>חדר שינה</option></select>
-<select id="condition"><option>חדש</option><option>יד שנייה</option></select>
-<input id="store" placeholder="חנות">
-<input id="price" type="number" placeholder="מחיר">
-<input id="shipping" type="number" placeholder="משלוח">
-<input id="link" placeholder="קישור">
-<input id="imageUrl" placeholder="או הדביקי URL לתמונה">
-<input type="file" id="image">
-</div>
-<textarea id="notes" placeholder="הערות"></textarea><br><br>
-<button class="primary" onclick="saveItem()">שמור פריט</button>
-</div>
+  <div class="form-card">
+    <div class="form-header">
+      <div class="form-title" id="formTitle">פריט חדש</div>
+      <span class="edit-chip" id="editBadge">עריכה</span>
+    </div>
 
-<div id="items" class="masonry"></div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column: span 2">
+        <label class="form-label">שם מוצר</label>
+        <input id="name" placeholder="למשל: כורסת טרקלין">
+      </div>
+      <div class="form-group">
+        <label class="form-label">חדר</label>
+        <select id="category">
+          <option>סלון</option><option>חדר שינה</option><option>מטבח</option>
+          <option>חדר רחצה</option><option>חדר עבודה</option><option>מסדרון</option>
+          <option>מרפסת</option><option>אחר</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">מצב</label>
+        <select id="condition"><option>חדש</option><option>יד שנייה</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">חנות</label>
+        <input id="store" placeholder="IKEA, אמזון...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">מחיר (₪)</label>
+        <input id="price" type="number" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">משלוח (₪)</label>
+        <input id="shipping" type="number" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">קישור</label>
+        <input id="link" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL לתמונה</label>
+        <input id="imageUrl" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">העלאת תמונה</label>
+        <input type="file" id="image" accept="image/*">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">הערות</label>
+      <textarea id="notes" placeholder="גדלים, צבעים, דגמים..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" onclick="saveItem()">שמור פריט</button>
+      <button class="btn-ghost" id="cancelBtn" onclick="cancelEdit()" style="display:none">ביטול</button>
+    </div>
+  </div>
+
+  <div class="section-label" id="sectionLabel">פריטים</div>
+  <div id="items" class="items-grid"></div>
 
 </div>
 
 <script>
-let items=JSON.parse(localStorage.getItem('homehubv3')||'[]');
-let editingId=null;
+let items = JSON.parse(localStorage.getItem('homehubv3') || '[]');
+let editingId = null;
 
-function qs(id){return document.getElementById(id);}
+function qs(id) { return document.getElementById(id); }
 
-function saveStorage(){
- localStorage.setItem('homehubv3',JSON.stringify(items));
- render();
+function saveStorage() {
+  localStorage.setItem('homehubv3', JSON.stringify(items));
+  render();
 }
 
-function saveItem(){
- const file=qs('image').files[0];
-
- const build=(img)=>{
-   const obj={
-    id:editingId||Date.now(),
-    name:qs('name').value,
-    category:qs('category').value,
-    condition:qs('condition').value,
-    store:qs('store').value,
-    price:Number(qs('price').value||0),
-    shipping:Number(qs('shipping').value||0),
-    link:qs('link').value,
-    notes:qs('notes').value,
-    image:img
-   };
-
-   if(editingId){
-      const idx=items.findIndex(x=>x.id===editingId);
-      items[idx]=obj;
-   }else{
+function saveItem() {
+  const file = qs('image').files[0];
+  const build = (img) => {
+    const obj = {
+      id: editingId || Date.now(),
+      name: qs('name').value.trim(),
+      category: qs('category').value,
+      condition: qs('condition').value,
+      store: qs('store').value.trim(),
+      price: Number(qs('price').value || 0),
+      shipping: Number(qs('shipping').value || 0),
+      link: qs('link').value.trim(),
+      notes: qs('notes').value.trim(),
+      image: img
+    };
+    if (!obj.name) { qs('name').focus(); return; }
+    if (editingId) {
+      const idx = items.findIndex(x => x.id === editingId);
+      items[idx] = obj;
+    } else {
       items.push(obj);
-   }
-
-   editingId=null;
-   document.querySelectorAll('input,textarea').forEach(el=>{
-      if(el.type!=='file') el.value='';
-   });
-   saveStorage();
- };
-
- if(file){
-   const reader=new FileReader();
-   reader.onload=e=>build(e.target.result);
-   reader.readAsDataURL(file);
- }else{
-   build(qs('imageUrl').value || 'https://via.placeholder.com/600x400');
- }
+    }
+    cancelEdit();
+    saveStorage();
+  };
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => build(e.target.result);
+    reader.readAsDataURL(file);
+  } else {
+    build(qs('imageUrl').value || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80');
+  }
 }
 
-function editItem(id){
- const i=items.find(x=>x.id===id);
- editingId=id;
- qs('formTitle').innerText='עריכת פריט';
- qs('name').value=i.name;
- qs('category').value=i.category;
- qs('condition').value=i.condition;
- qs('store').value=i.store;
- qs('price').value=i.price;
- qs('shipping').value=i.shipping;
- qs('link').value=i.link;
- qs('notes').value=i.notes;
- qs('imageUrl').value=i.image.startsWith('http')?i.image:'';
- window.scrollTo({top:0,behavior:'smooth'});
+function cancelEdit() {
+  editingId = null;
+  qs('formTitle').innerText = 'פריט חדש';
+  qs('editBadge').classList.remove('on');
+  qs('cancelBtn').style.display = 'none';
+  document.querySelectorAll('input,textarea').forEach(el => { if (el.type !== 'file') el.value = ''; });
+  qs('category').selectedIndex = 0;
+  qs('condition').selectedIndex = 0;
 }
 
-function deleteItem(id){
- items=items.filter(x=>x.id!==id);
- saveStorage();
+function editItem(id) {
+  const i = items.find(x => x.id === id);
+  editingId = id;
+  qs('formTitle').innerText = i.name;
+  qs('editBadge').classList.add('on');
+  qs('cancelBtn').style.display = 'inline-flex';
+  qs('name').value = i.name;
+  qs('category').value = i.category;
+  qs('condition').value = i.condition;
+  qs('store').value = i.store;
+  qs('price').value = i.price;
+  qs('shipping').value = i.shipping;
+  qs('link').value = i.link;
+  qs('notes').value = i.notes;
+  qs('imageUrl').value = i.image && i.image.startsWith('http') ? i.image : '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function render(){
- qs('items').innerHTML=items.map(i=>`
- <div class="card item">
- <img src="${i.image}">
- <h3>${i.name}</h3>
- <span class="badge" style="background:${i.condition==='חדש'?'green':'steelblue'}">${i.condition}</span>
- <p>${i.category}</p>
- <p>${i.store}</p>
- <p>₪${(i.price+i.shipping).toLocaleString()}</p>
- <a href="${i.link}" target="_blank">מוצר</a><br><br>
- <button class="primary" onclick="editItem(${i.id})">עריכה מלאה</button>
- <button class="danger" onclick="deleteItem(${i.id})">מחק</button>
- </div>
- `).join('');
+function deleteItem(id) {
+  const i = items.find(x => x.id === id);
+  if (!confirm('למחוק את "' + i.name + '"?')) return;
+  items = items.filter(x => x.id !== id);
+  saveStorage();
+}
 
- qs('totalItems').innerText=items.length;
- qs('totalCost').innerText='₪'+items.reduce((a,b)=>a+b.price+b.shipping,0).toLocaleString();
+function fmt(n) { return '₪' + n.toLocaleString('he-IL'); }
+
+function render() {
+  const total = items.reduce((a, b) => a + b.price + b.shipping, 0);
+  qs('totalItems').innerText = items.length;
+  qs('totalCost').innerText = fmt(total);
+  qs('headerCount').innerText = items.length ? items.length + ' items' : '';
+  qs('sectionLabel').innerText = items.length ? 'פריטים — ' + items.length : 'פריטים';
+
+  if (!items.length) {
+    qs('items').innerHTML = '<div class="empty"><div class="empty-icon">🛋️</div><div class="empty-title">אין פריטים עדיין</div><div class="empty-sub">הוסיפי פריט ראשון למעלה</div></div>';
+    return;
+  }
+
+  qs('items').innerHTML = items.map(i => {
+    const isNew = i.condition === 'חדש';
+    const hasNotes = i.notes && i.notes.trim();
+    const hasLink = i.link && i.link.trim();
+    return '<div class="item-card">' +
+      '<div class="item-img"><img src="' + i.image + '" alt="' + i.name + '" loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80\'"></div>' +
+      '<div class="item-body">' +
+        '<div class="item-top">' +
+          '<div class="item-name">' + i.name + '</div>' +
+          '<span class="cond-badge ' + (isNew ? 'cond-new' : 'cond-used') + '">' + i.condition + '</span>' +
+        '</div>' +
+        '<div class="item-meta">' +
+          '<span>' + i.category + '</span>' +
+          (i.store ? '<span class="item-meta-sep">·</span><span>' + i.store + '</span>' : '') +
+        '</div>' +
+        '<div class="item-price">' + fmt(i.price + i.shipping) +
+          (i.shipping ? '<small>  כולל משלוח ₪' + i.shipping.toLocaleString() + '</small>' : '') +
+        '</div>' +
+        (hasNotes ? '<div class="item-notes">' + i.notes + '</div>' : '') +
+      '</div>' +
+      '<div class="item-footer">' +
+        (hasLink ? '<a class="item-link" href="' + i.link + '" target="_blank">↗ לינק</a>' : '<span></span>') +
+        '<button class="btn-edit-sm" onclick="editItem(' + i.id + ')">עריכה</button>' +
+        '<button class="btn-danger-sm" onclick="deleteItem(' + i.id + ')">מחק</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
 render();
 </script>
-</body></html>
+</body>
+</html>
