@@ -396,6 +396,34 @@
   }
   .empty-sub { font-size: 13px; color: var(--text-hint); }
 
+  /* ─── FILTERS ─── */
+  .filters-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { background: var(--accent-soft); color: var(--accent-mid); }
+  .filter-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
   @media(max-width:600px) {
     .container { padding: 20px 16px 48px; }
     .form-card { padding: 20px 18px; }
@@ -409,7 +437,7 @@
   <div class="header-inner">
     <div class="logo">
       <div class="logo-mark">🏠</div>
-      <div class="logo-text">Inbar's<span>/</span>Room Hub</div>
+      <div class="logo-text">Inbar's<span>/</span>Home Hub</div>
     </div>
     <div class="header-count" id="headerCount"></div>
   </div>
@@ -488,6 +516,9 @@
     </div>
   </div>
 
+  <div class="filters-row" id="filtersRow" style="display:none">
+    <button class="filter-btn active" onclick="setFilter(null, this)">הכל</button>
+  </div>
   <div class="section-label" id="sectionLabel">פריטים</div>
   <div id="items" class="items-grid"></div>
 
@@ -496,6 +527,7 @@
 <script>
 let items = JSON.parse(localStorage.getItem('homehubv3') || '[]');
 let editingId = null;
+let activeFilter = null;
 
 function qs(id) { return document.getElementById(id); }
 
@@ -573,21 +605,44 @@ function deleteItem(id) {
   saveStorage();
 }
 
+function setFilter(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
 function fmt(n) { return '₪' + n.toLocaleString('he-IL'); }
+
+function updateFilters() {
+  const cats = [...new Set(items.map(i => i.category))];
+  const row = qs('filtersRow');
+  if (cats.length < 2) { row.style.display = 'none'; return; }
+  row.style.display = 'flex';
+  // rebuild, keeping "הכל" first
+  row.innerHTML = '<button class="filter-btn' + (activeFilter === null ? ' active' : '') + '" onclick="setFilter(null, this)">הכל</button>' +
+    cats.map(c => '<button class="filter-btn' + (activeFilter === c ? ' active' : '') + '" onclick="setFilter(\'' + c + '\', this)">' + c + '</button>').join('');
+}
 
 function render() {
   const total = items.reduce((a, b) => a + b.price + b.shipping, 0);
   qs('totalItems').innerText = items.length;
   qs('totalCost').innerText = fmt(total);
   qs('headerCount').innerText = items.length ? items.length + ' items' : '';
-  qs('sectionLabel').innerText = items.length ? 'פריטים — ' + items.length : 'פריטים';
 
-  if (!items.length) {
+  updateFilters();
+
+  const visible = activeFilter ? items.filter(i => i.category === activeFilter) : items;
+  qs('sectionLabel').innerText = activeFilter
+    ? activeFilter + ' — ' + visible.length
+    : (items.length ? 'פריטים — ' + items.length : 'פריטים');
+
+  if (!visible.length) {
     qs('items').innerHTML = '<div class="empty"><div class="empty-icon">🛋️</div><div class="empty-title">אין פריטים עדיין</div><div class="empty-sub">הוסיפי פריט ראשון למעלה</div></div>';
     return;
   }
 
-  qs('items').innerHTML = items.map(i => {
+  qs('items').innerHTML = visible.map(i => {
     const isNew = i.condition === 'חדש';
     const hasNotes = i.notes && i.notes.trim();
     const hasLink = i.link && i.link.trim();
